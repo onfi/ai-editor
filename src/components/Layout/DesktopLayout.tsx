@@ -1,4 +1,5 @@
 import React from 'react';
+import { useThemeContext } from '../../contexts/ThemeContext';
 
 interface DesktopLayoutProps {
   editor: React.ReactNode;
@@ -11,13 +12,15 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   preview,
   fileTree,
 }) => {
+  const { colors } = useThemeContext();
+
   return (
-    <div className="flex h-screen bg-gray-900 text-gray-100">
-      <div className="w-64 border-r border-gray-700 overflow-hidden flex flex-col">
+    <div className={`flex h-screen ${colors.bg} ${colors.text}`}>
+      <div className={`w-64 border-r ${colors.border} overflow-hidden flex flex-col`}>
         {fileTree}
       </div>
       <div className="flex-1 flex">
-        <div className="flex-1 border-r border-gray-700 overflow-hidden">
+        <div className={`flex-1 border-r ${colors.border} overflow-hidden`}>
           {editor}
         </div>
         <div className="flex-1 overflow-hidden">

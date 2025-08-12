@@ -27,26 +27,26 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ file, position, onClos
   const handleRename = () => {
     const newName = prompt('新しい名前を入力してください:', file.name);
     if (newName && newName !== file.name) {
-      updateFile(file.id, { name: newName });
+      updateFile(file, { name: newName });
     }
     onClose();
   };
 
   const handleCopy = () => {
-    const copyFile: File = {
-      ...file,
-      id: Math.random().toString(36).substr(2, 9),
+    const copyFile = {
       name: `${file.name} (コピー)`,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      content: file.content,
+      type: file.type,
     };
-    addFile(copyFile);
+    
+    const parentPath = file.parent ? file.parent.getPath() : '';
+    addFile(copyFile, parentPath);
     onClose();
   };
 
   const handleDelete = () => {
     if (confirm(`"${file.name}" を削除しますか？`)) {
-      deleteFile(file.id);
+      deleteFile(file);
     }
     onClose();
   };

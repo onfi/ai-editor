@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Undo, Redo } from 'lucide-react';
 import { EditorView } from 'codemirror';
+import { useThemeContext } from '../../contexts/ThemeContext';
 import { AIDialog } from './AIDialog';
 
 interface ToolbarProps {
@@ -9,6 +10,7 @@ interface ToolbarProps {
 
 export const Toolbar: React.FC<ToolbarProps> = ({ editorView }) => {
   const [showAIDialog, setShowAIDialog] = useState(false);
+  const { colors } = useThemeContext();
 
   const handleUndo = () => {
     if (editorView) {
@@ -28,27 +30,27 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editorView }) => {
 
   return (
     <>
-      <div className="flex items-center gap-2 p-2 border-b border-gray-700 bg-gray-800">
+      <div className={`flex items-center gap-1 px-4 py-2 ${colors.border} ${colors.bgSecondary}`}>
         <button
           onClick={() => setShowAIDialog(true)}
-          className="p-2 rounded hover:bg-gray-700 transition-colors"
+          className={`p-1.5 rounded transition-colors ${colors.button}`}
           title="AIアシスト"
         >
-          <Sparkles size={20} />
+          <Sparkles size={16} />
         </button>
         <button
           onClick={handleUndo}
-          className="p-2 rounded hover:bg-gray-700 transition-colors"
+          className={`p-1.5 rounded transition-colors ${colors.button}`}
           title="元に戻す"
         >
-          <Undo size={20} />
+          <Undo size={16} />
         </button>
         <button
           onClick={handleRedo}
-          className="p-2 rounded hover:bg-gray-700 transition-colors"
+          className={`p-1.5 rounded transition-colors ${colors.button}`}
           title="やり直す"
         >
-          <Redo size={20} />
+          <Redo size={16} />
         </button>
       </div>
       {showAIDialog && (

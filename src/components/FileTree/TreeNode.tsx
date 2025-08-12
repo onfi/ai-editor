@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, File, Folder, FolderOpen } from 'lucide-react';
 import { useFileStore } from '../../stores/fileStore';
 import { useEditorStore } from '../../stores/editorStore';
+import { useThemeContext } from '../../contexts/ThemeContext';
 import type { File as FileType } from '../../types/index';
 import { ContextMenu } from './ContextMenu';
 import { cn } from '../../utils/helpers';
@@ -12,21 +13,28 @@ interface TreeNodeProps {
 }
 
 export const TreeNode: React.FC<TreeNodeProps> = ({ file, level }) => {
-  const { files, expandedFolders, toggleFolder } = useFileStore();
-  const { currentFileId, setCurrentFileId, setContent } = useEditorStore();
+  const { expandedFolders, toggleFolder } = useFileStore();
+  const { currentFile, setCurrentFile, setContent } = useEditorStore();
+  const { colors } = useThemeContext();
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
-  const isExpanded = expandedFolders.has(file.id);
-  const children = files.filter(f => f.parentId === file.id);
-  const isActive = currentFileId === file.id;
+  const isExpanded = expandedFolders.has(file);
+  const children = file.children ? Object.values(file.children) : [];
+  const isActive = currentFile === file;
 
   const handleClick = () => {
+    setCurrentFile(file);
+    
     if (file.type === 'directory') {
-      toggleFolder(file.id);
+      toggleFolder(file);
+      setContent('');
     } else {
-      setCurrentFileId(file.id);
       setContent(file.content);
+      // ファイル選択時にURLを更新（ハッシュベース）
+      const filePath = file.getPath();
+      const cleanPath = filePath.startsWith('root/') ? filePath.substring(5) : filePath;
+      window.location.hash = `#file/${encodeURIComponent(cleanPath)}`;
     }
   };
 
@@ -39,37 +47,40 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ file, level }) => {
   const renderIcon = () => {
     if (file.type === 'directory') {
       if (isExpanded) {
-        return <FolderOpen size={16} />;
+        return <FolderOpen size={14} className={colors.folderIcon} />;
       }
-      return <Folder size={16} />;
+      return <Folder size={14} className={colors.folderIcon} />;
     }
-    return <File size={16} />;
+    return <File size={14} className={colors.fileIcon} />;
   };
 
   return (
     <>
       <div
         className={cn(
-          'flex items-center px-2 py-1 rounded cursor-pointer hover:bg-gray-800 transition-colors',
-          isActive && 'bg-gray-800'
+          `flex items-center py-1 cursor-pointer transition-colors group ${colors.hover}`,
+          isActive && colors.active
         )}
-        style={{ paddingLeft: `${level * 16 + 8}px` }}
+        style={{ paddingLeft: `${level * 12 + 12}px`, paddingRight: '8px' }}
         onClick={handleClick}
         onContextMenu={handleContextMenu}
       >
         {file.type === 'directory' && (
-          <span className="mr-1">
-            {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          <span className={`mr-1 ${colors.textMuted} group-hover:${colors.textSecondary}`}>
+            {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
           </span>
         )}
-        <span className="mr-2 text-gray-400">{renderIcon()}</span>
-        <span className="text-sm truncate">{file.name}</span>
+        <span className="mr-2">{renderIcon()}</span>
+        <span className={cn(
+          "text-sm truncate transition-colors",
+          isActive ? `${colors.text} font-medium` : `${colors.textSecondary} group-hover:${colors.text}`
+        )}>{file.name}</span>
       </div>
       
       {file.type === 'directory' && isExpanded && (
         <div>
           {children.map(child => (
-            <TreeNode key={child.id} file={child} level={level + 1} />
+            <TreeNode key={child.getPath()} file={child} level={level + 1} />
           ))}
         </div>
       )}

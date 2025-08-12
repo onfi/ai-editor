@@ -1,87 +1,100 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Plus, FolderPlus, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useFileStore } from '../../stores/fileStore';
+import { useEditorStore } from '../../stores/editorStore';
+import { useThemeContext } from '../../contexts/ThemeContext';
 import { TreeNode } from './TreeNode';
-import { generateId } from '../../utils/helpers';
-import type { File } from '../../types/index';
-import { SettingsScreen } from '../Settings/SettingsScreen';
+import { IconButton } from '../UI/IconButton';
+import { File } from '../../types/index';
 
 export const FileTree: React.FC = () => {
-  const { files, addFile } = useFileStore();
-  const [showSettings, setShowSettings] = useState(false);
+  const { rootFile, addFile } = useFileStore();
+  const { colors } = useThemeContext();
 
   const handleCreateFile = () => {
-    const newFile: File = {
-      id: generateId(),
+    const { currentFile } = useEditorStore.getState();
+    let parentPath = '';
+    
+    if (currentFile) {
+      if (currentFile.type === 'directory') {
+        parentPath = currentFile.getPath();
+      } else if (currentFile.parent) {
+        parentPath = currentFile.parent.getPath();
+      }
+    }
+    
+    const newFile = {
       name: 'untitled.md',
       content: '',
-      parentId: null,
-      type: 'file',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      type: 'file' as const,
     };
-    addFile(newFile);
+    addFile(newFile, parentPath);
   };
 
   const handleCreateDirectory = () => {
-    const newDirectory: File = {
-      id: generateId(),
+    const { currentFile } = useEditorStore.getState();
+    let parentPath = '';
+    
+    if (currentFile) {
+      if (currentFile.type === 'directory') {
+        parentPath = currentFile.getPath();
+      } else if (currentFile.parent) {
+        parentPath = currentFile.parent.getPath();
+      }
+    }
+    
+    const newDirectory = {
       name: 'New Folder',
       content: '',
-      parentId: null,
-      type: 'directory',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      type: 'directory' as const,
     };
-    addFile(newDirectory);
+    addFile(newDirectory, parentPath);
   };
 
-  const rootFiles = files.filter(f => f.parentId === null);
+
+  const rootFiles = rootFile.children ? Object.values(rootFile.children) : [];
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between p-2 border-b border-gray-700 bg-gray-800">
-        <h2 className="text-sm font-semibold">Files</h2>
+      <div className={`flex items-center justify-end px-4 py-3 ${colors.border} ${colors.bgSecondary}`}>
         <div className="flex items-center gap-1">
-          <button
+          <IconButton
+            icon={Plus}
             onClick={handleCreateFile}
-            className="p-1.5 rounded hover:bg-gray-700 transition-colors"
+            variant="tertiary"
+            size="small"
             title="新規ファイル"
-          >
-            <Plus size={16} />
-          </button>
-          <button
+          />
+          <IconButton
+            icon={FolderPlus}
             onClick={handleCreateDirectory}
-            className="p-1.5 rounded hover:bg-gray-700 transition-colors"
+            variant="tertiary"
+            size="small"
             title="新規フォルダ"
-          >
-            <FolderPlus size={16} />
-          </button>
-          <button
-            onClick={() => setShowSettings(true)}
-            className="p-1.5 rounded hover:bg-gray-700 transition-colors"
-            title="設定"
-          >
-            <Settings size={16} />
-          </button>
+          />
+          <Link to="/settings">
+            <IconButton
+              icon={Settings}
+              variant="tertiary"
+              size="small"
+              title="設定"
+            />
+          </Link>
         </div>
       </div>
       
-      <div className="flex-1 overflow-auto p-2">
+      <div className={`flex-1 overflow-auto ${colors.bg}`}>
         {rootFiles.length === 0 ? (
-          <p className="text-gray-500 text-sm text-center mt-4">
+          <p className={`text-sm text-center mt-4 ${colors.textMuted}`}>
             ファイルがありません
           </p>
         ) : (
           rootFiles.map(file => (
-            <TreeNode key={file.id} file={file} level={0} />
+            <TreeNode key={file.getPath()} file={file} level={0} />
           ))
         )}
       </div>
-      
-      {showSettings && (
-        <SettingsScreen onClose={() => setShowSettings(false)} />
-      )}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileText, Eye, FolderTree } from 'lucide-react';
 import { useSettingsStore } from '../../stores/settingsStore';
+import { useThemeContext } from '../../contexts/ThemeContext';
 
 interface MobileLayoutProps {
   editor: React.ReactNode;
@@ -14,6 +15,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({
   fileTree,
 }) => {
   const { currentView, setCurrentView } = useSettingsStore();
+  const { colors } = useThemeContext();
 
   const renderView = () => {
     switch (currentView) {
@@ -29,15 +31,15 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-gray-100">
+    <div className={`flex flex-col h-screen ${colors.bg} ${colors.text}`}>
       <div className="flex-1 overflow-hidden">
         {renderView()}
       </div>
-      <div className="flex border-t border-gray-700 bg-gray-800">
+      <div className={`flex border-t ${colors.border} ${colors.bgSecondary}`}>
         <button
           onClick={() => setCurrentView('fileTree')}
           className={`flex-1 p-4 flex flex-col items-center gap-1 transition-colors ${
-            currentView === 'fileTree' ? 'text-blue-400' : 'text-gray-400'
+            currentView === 'fileTree' ? 'text-blue-400' : colors.textMuted
           }`}
         >
           <FolderTree size={20} />
@@ -46,7 +48,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({
         <button
           onClick={() => setCurrentView('editor')}
           className={`flex-1 p-4 flex flex-col items-center gap-1 transition-colors ${
-            currentView === 'editor' ? 'text-blue-400' : 'text-gray-400'
+            currentView === 'editor' ? 'text-blue-400' : colors.textMuted
           }`}
         >
           <FileText size={20} />
@@ -55,7 +57,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({
         <button
           onClick={() => setCurrentView('preview')}
           className={`flex-1 p-4 flex flex-col items-center gap-1 transition-colors ${
-            currentView === 'preview' ? 'text-blue-400' : 'text-gray-400'
+            currentView === 'preview' ? 'text-blue-400' : colors.textMuted
           }`}
         >
           <Eye size={20} />

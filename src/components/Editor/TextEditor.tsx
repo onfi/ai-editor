@@ -3,38 +3,48 @@ import { EditorView, minimalSetup } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 import { markdown } from '@codemirror/lang-markdown';
 import { oneDark } from '@codemirror/theme-one-dark';
+import { lineNumbers } from '@codemirror/view';
 import { useEditorStore } from '../../stores/editorStore';
+import { useFileStore } from '../../stores/fileStore';
+import { useThemeContext } from '../../contexts/ThemeContext';
 import { Toolbar } from './Toolbar';
 
 export const TextEditor: React.FC = () => {
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const { content, setContent, setCursorPosition, setSelectedText } = useEditorStore();
+  const { colors, isDark } = useThemeContext();
 
   useEffect(() => {
     if (!editorRef.current) return;
 
+    const extensions = [
+      minimalSetup,
+      lineNumbers(),
+      markdown(),
+      EditorView.updateListener.of((update) => {
+        if (update.docChanged) {
+          setContent(update.state.doc.toString());
+        }
+        
+        const selection = update.state.selection.main;
+        setCursorPosition(selection.head);
+        
+        if (selection.from !== selection.to) {
+          setSelectedText({ start: selection.from, end: selection.to });
+        } else {
+          setSelectedText(null);
+        }
+      }),
+    ];
+    
+    if (isDark) {
+      extensions.push(oneDark);
+    }
+    
     const startState = EditorState.create({
       doc: content,
-      extensions: [
-        minimalSetup,
-        markdown(),
-        oneDark,
-        EditorView.updateListener.of((update) => {
-          if (update.docChanged) {
-            setContent(update.state.doc.toString());
-          }
-          
-          const selection = update.state.selection.main;
-          setCursorPosition(selection.head);
-          
-          if (selection.from !== selection.to) {
-            setSelectedText({ start: selection.from, end: selection.to });
-          } else {
-            setSelectedText(null);
-          }
-        }),
-      ],
+      extensions,
     });
 
     const view = new EditorView({
@@ -62,9 +72,9 @@ export const TextEditor: React.FC = () => {
   }, [content]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className={`flex flex-col h-full ${colors.bg}`}>
       <Toolbar editorView={viewRef.current} />
-      <div ref={editorRef} className="flex-1 overflow-auto" />
+      <div ref={editorRef} className={`flex-1 overflow-auto ${colors.bg} p-4`} />
     </div>
   );
 };
