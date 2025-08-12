@@ -69,7 +69,7 @@ export const Modal: React.FC<ModalProps> = ({
       <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
         {/* 背景オーバーレイ */}
         <div
-          className={`fixed inset-0 bg-gray-500 bg-opacity-75 backdrop-blur-sm transition-opacity duration-300 ${
+          className={`fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md transition-opacity duration-300 ${
             isOpen ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={handleBackdropClick}
@@ -80,7 +80,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           ref={modalRef}
           tabIndex={-1}
-          className={`relative transform overflow-hidden rounded-lg ${colors.bg} shadow-xl transition-all duration-300 ease-out ${getMaxWidthClass()} w-full ${
+          className={`relative transform overflow-hidden rounded-[3px] ${colors.bg} shadow-2xl transition-all duration-300 ease-out ${getMaxWidthClass()} w-full ${
             isOpen 
               ? 'opacity-100 translate-y-0 sm:scale-100' 
               : 'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
@@ -109,7 +109,7 @@ export const Modal: React.FC<ModalProps> = ({
                   </h3>
                   <button
                     onClick={onClose}
-                    className={`rounded-md p-2 transition-colors ${colors.textMuted} hover:${colors.text} hover:${colors.bgTertiary}`}
+                    className={`rounded-full p-1 transition-colors ${colors.textMuted} hover:${colors.bgTertiary} hover:${colors.text}`}
                     aria-label="閉じる"
                   >
                     <X size={20} />

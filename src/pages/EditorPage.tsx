@@ -12,7 +12,7 @@ export const EditorPage: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const { getFile } = useFileStore();
-  const { setCurrentFile, setContent } = useEditorStore();
+  const { setCurrentFile, setContent, currentFile } = useEditorStore();
 
   useEffect(() => {
     const checkMobile = () => {
@@ -38,6 +38,14 @@ export const EditorPage: React.FC = () => {
       }
     }
   }, [location.hash, getFile, setCurrentFile, setContent]);
+
+  useEffect(() => {
+    if (currentFile) {
+      document.title = `${currentFile.name} | AI Editor`;
+    } else {
+      document.title = 'AI Editor';
+    }
+  }, [currentFile]);
 
   const editor = <TextEditor />;
   const preview = <MarkdownPreview />;
