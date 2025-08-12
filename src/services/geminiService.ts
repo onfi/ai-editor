@@ -1,10 +1,10 @@
-import { GoogleGenerativeAI } from '@google/genai';
+import { GoogleGenAI, type Content } from '@google/genai';
 
 export interface AIRequest {
   prompt: string;
-  context?: string;
+  prevText?: string;
   selectedText?: string;
-  type: 'generate' | 'edit' | 'summarize' | 'translate' | 'improve';
+  afterText?: string;
 }
 
 export interface AIResponse {
@@ -14,8 +14,7 @@ export interface AIResponse {
 }
 
 export class GeminiService {
-  private client: GoogleGenerativeAI | null = null;
-  private model: any = null;
+  private client: GoogleGenAI | null = null;
 
   constructor(apiKey?: string) {
     if (apiKey) {
@@ -25,57 +24,36 @@ export class GeminiService {
 
   initialize(apiKey: string) {
     try {
-      this.client = new GoogleGenerativeAI(apiKey);
-      this.model = this.client.getGenerativeModel({ model: 'gemini-pro' });
+      this.client = new GoogleGenAI({ apiKey });
     } catch (error) {
       console.error('Failed to initialize Gemini client:', error);
       this.client = null;
-      this.model = null;
     }
   }
 
-  private buildPrompt(request: AIRequest): string {
-    const { prompt, context, selectedText, type } = request;
-    
-    let systemPrompt = '';
-    
-    switch (type) {
-      case 'generate':
-        systemPrompt = 'あなたは優秀なテキスト生成AIです。ユーザーの要求に応じて、適切で有用なテキストを生成してください。';
-        break;
-      case 'edit':
-        systemPrompt = 'あなたは優秀な文章校正・編集AIです。選択されたテキストを改善してください。';
-        break;
-      case 'summarize':
-        systemPrompt = 'あなたは優秀な要約AIです。提供されたテキストを簡潔に要約してください。';
-        break;
-      case 'translate':
-        systemPrompt = 'あなたは優秀な翻訳AIです。適切な言語に翻訳してください。';
-        break;
-      case 'improve':
-        systemPrompt = 'あなたは優秀な文章改善AIです。提供されたテキストをより良く改善してください。';
-        break;
-      default:
-        systemPrompt = 'あなたは優秀なAIアシスタントです。';
-    }
+  private buildPrompt(request: AIRequest): Content[] {
+    const content: Content[] = [];
+    const { prompt, prevText, selectedText, afterText } = request;
 
-    let fullPrompt = systemPrompt + '\n\n';
+    content.push({ role: 'model', parts: [{ text: 'あなたは優秀なマークダウン生成AIです。マークダウン生成のみを行い、その他のテキストは生成しないでください。' }] });
     
+    if (prevText) {
+      content.push({ role: 'model', parts: [{ text: `下記の文章の続きの文章を生成してください\n\n${prevText}` }] });
+    }
+    if (afterText) {
+      content.push({ role: 'model', parts: [{ text: `生成したテキストに下記の文章が続きます。自然に繋がる文章を生成してください\n\n${afterText}` }] });
+    }
     if (selectedText) {
-      fullPrompt += `選択されたテキスト:\n${selectedText}\n\n`;
+      content.push({ role: 'model', parts: [{ text: `下記のテキストをユーザーの指示に従いマークダウンを修正してください\n\n${selectedText}` }] });
+    } else {
+      content.push({ role: 'model', parts: [{ text: `ユーザーの指示に従い、マークダウンを生成してください` }] });
     }
-    
-    if (context && context !== selectedText) {
-      fullPrompt += `コンテキスト:\n${context}\n\n`;
-    }
-    
-    fullPrompt += `ユーザーの要求:\n${prompt}`;
-    
-    return fullPrompt;
+    content.push({ role: 'user', parts: [{ text: prompt }] });
+    return content;
   }
 
   async generateText(request: AIRequest): Promise<AIResponse> {
-    if (!this.model) {
+    if (!this.client) {
       return {
         text: '',
         success: false,
@@ -83,15 +61,14 @@ export class GeminiService {
       };
     }
 
-    try {
-      const fullPrompt = this.buildPrompt(request);
-      
-      const result = await this.model.generateContent(fullPrompt);
-      const response = await result.response;
-      const text = response.text();
+    try {      
+      const result = await this.client.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: this.buildPrompt(request)
+      });
 
       return {
-        text,
+        text: result.text || '',
         success: true
       };
     } catch (error: any) {
@@ -117,46 +94,8 @@ export class GeminiService {
     }
   }
 
-  async generateTextStream(
-    request: AIRequest,
-    onChunk: (chunk: string) => void
-  ): Promise<AIResponse> {
-    if (!this.model) {
-      return {
-        text: '',
-        success: false,
-        error: 'Gemini APIが初期化されていません。'
-      };
-    }
-
-    try {
-      const fullPrompt = this.buildPrompt(request);
-      
-      const result = await this.model.generateContentStream(fullPrompt);
-      let fullText = '';
-
-      for await (const chunk of result.stream) {
-        const chunkText = chunk.text();
-        fullText += chunkText;
-        onChunk(chunkText);
-      }
-
-      return {
-        text: fullText,
-        success: true
-      };
-    } catch (error: any) {
-      console.error('Gemini streaming error:', error);
-      return {
-        text: '',
-        success: false,
-        error: 'ストリーミング生成中にエラーが発生しました。'
-      };
-    }
-  }
-
   isInitialized(): boolean {
-    return this.client !== null && this.model !== null;
+    return this.client !== null;
   }
 }
 
