@@ -16,14 +16,14 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
 
   return (
     <div className={`flex h-screen ${colors.bg} ${colors.text}`}>
-      <div className={`w-64 border-r ${colors.border} overflow-hidden flex flex-col`}>
+      <div className={`w-[10vw] border-r ${colors.border} overflow-hidden flex flex-col`}>
         {fileTree}
       </div>
       <div className="flex-1 flex">
-        <div className={`flex-1 border-r ${colors.border} overflow-hidden`}>
+        <div className={`w-[45vw] border-r ${colors.border} overflow-hidden`}>
           {editor}
         </div>
-        <div className="flex-1 overflow-hidden">
+        <div className={`w-[45vw] overflow-hidden`}>
           {preview}
         </div>
       </div>
