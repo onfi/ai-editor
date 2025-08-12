@@ -31,10 +31,7 @@ function cleanUrl(href: string) {
 const renderer = new marked.Renderer();
 
 // レンダラーの設定
-renderer.space = (token: Tokens.Space): string => {
-  return "";
-};
-renderer.space = (token: Tokens.Space): string => {
+renderer.space = (): string => {
   return "";
 };
 
@@ -43,7 +40,6 @@ renderer.code = ({ text, lang }: Tokens.Code): string => {
     return `<div class="katex">${katex.renderToString(text, { throwOnError: false })}</div>\n`;
   }
   const langString = (lang || "").match(/^[^:]*/)?.[0] ?? "";
-  const fileName = (lang || "").split(":", 2).pop() ?? "";
   const code = text.replace(/\n$/, "") + "\n";
 
   const language = hljs.getLanguage(langString);
@@ -68,17 +64,17 @@ renderer.heading = ({ tokens, depth }: Tokens.Heading): string => {
   return `<h${depth + 1}>${marked.Parser.parseInline(tokens)}</h${depth + 1}>\n`;
 };
 
-renderer.hr = (token: Tokens.Hr): string => {
+renderer.hr = (): string => {
   return "<hr>\n";
 };
 
-renderer.list = (token: Tokens.List): string => {
-  const ordered = token.ordered;
-  const start = token.start;
+renderer.list = (listToken: Tokens.List): string => {
+  const ordered = listToken.ordered;
+  const start = listToken.start;
 
   let body = "";
-  for (let j = 0; j < token.items.length; j++) {
-    const item = token.items[j];
+  for (let j = 0; j < listToken.items.length; j++) {
+    const item = listToken.items[j];
     body += renderer.listitem(item);
   }
 
@@ -129,19 +125,19 @@ renderer.paragraph = ({ tokens }: Tokens.Paragraph): string => {
   return `<p>${marked.Parser.parseInline(tokens)}</p>\n`;
 };
 
-renderer.table = (token: Tokens.Table): string => {
+renderer.table = (tableToken: Tokens.Table): string => {
   let header = "";
 
   // header
   let cell = "";
-  for (let j = 0; j < token.header.length; j++) {
-    cell += renderer.tablecell(token.header[j]);
+  for (let j = 0; j < tableToken.header.length; j++) {
+    cell += renderer.tablecell(tableToken.header[j]);
   }
   header += renderer.tablerow({ text: cell });
 
   let body = "";
-  for (let j = 0; j < token.rows.length; j++) {
-    const row = token.rows[j];
+  for (let j = 0; j < tableToken.rows.length; j++) {
+    const row = tableToken.rows[j];
 
     cell = "";
     for (let k = 0; k < row.length; k++) {
@@ -159,11 +155,12 @@ renderer.tablerow = ({ text }: Tokens.TableRow): string => {
   return `<tr>\n${text}</tr>\n`;
 };
 
-renderer.tablecell = (token: Tokens.TableCell): string => {
-  const content = marked.Parser.parseInline(token.tokens);
-  const type = token.header ? "th" : "td";
-  const tag = token.align ? `<${type} align="${token.align}">` : `<${type}>`;
-  return tag + content + `</${type}>\n`;
+renderer.tablecell = (cellToken: Tokens.TableCell): string => {
+  const content = marked.Parser.parseInline(cellToken.tokens);
+  const type = cellToken.header ? "th" : "td";
+  const tag = cellToken.align ? `<${type} align="${cellToken.align}">` : `<${type}>`;
+  return tag + content + `</${type}>
+`;
 };
 
 renderer.strong = ({ tokens }: Tokens.Strong): string => {
@@ -178,7 +175,7 @@ renderer.codespan = ({ text }: Tokens.Codespan): string => {
   return `<code class="codespan">${escapeHtml(text)}</code>`;
 };
 
-renderer.br = (token: Tokens.Br): string => {
+renderer.br = (): string => {
   return "<br>";
 };
 
@@ -216,12 +213,12 @@ renderer.image = ({ href, title, text }: Tokens.Image): string => {
   return out;
 };
 
-renderer.text = (token: Tokens.Text | Tokens.Escape): string => {
-  return "tokens" in token && token.tokens
-    ? marked.Parser.parseInline(token.tokens)
-    : "escaped" in token && token.escaped
-      ? token.text
-      : escapeHtml(token.text);
+renderer.text = (arg: Tokens.Text | Tokens.Escape): string => {
+  return "tokens" in arg && arg.tokens
+    ? marked.Parser.parseInline(arg.tokens)
+    : "escaped" in arg && arg.escaped
+      ? arg.text
+      : escapeHtml(arg.text);
 };
 
 // markedの設定を適用

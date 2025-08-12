@@ -1,4 +1,4 @@
-import { StateStorage } from 'zustand/middleware';
+import { type StateStorage } from 'zustand/middleware';
 
 const DB_NAME = 'markdown-editor-db';
 const DB_VERSION = 1;

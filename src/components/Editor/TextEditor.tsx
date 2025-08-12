@@ -5,7 +5,6 @@ import { markdown } from '@codemirror/lang-markdown';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { lineNumbers } from '@codemirror/view';
 import { useEditorStore } from '../../stores/editorStore';
-import { useFileStore } from '../../stores/fileStore';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import { Toolbar } from './Toolbar';
 

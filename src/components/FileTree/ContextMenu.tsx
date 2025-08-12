@@ -33,10 +33,14 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ file, position, onClos
   };
 
   const handleCopy = () => {
+    const now = new Date();
     const copyFile = {
       name: `${file.name} (コピー)`,
       content: file.content,
       type: file.type,
+      createdAt: now,
+      updatedAt: now,
+      history: [],
     };
     
     const parentPath = file.parent ? file.parent.getPath() : '';

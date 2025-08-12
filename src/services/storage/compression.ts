@@ -55,7 +55,7 @@ export async function decompressString(compressedText: string): Promise<string> 
     decompressedChunks.reduce((acc, chunk) => acc + chunk.length, 0)
   );
   
-  offset = 0;
+  let offset = 0;
   for (const chunk of decompressedChunks) {
     decompressedArray.set(chunk, offset);
     offset += chunk.length;

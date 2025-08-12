@@ -20,7 +20,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   title,
   disabled = false,
 }) => {
-  const { colors, isDark } = useThemeContext();
+  const { colors } = useThemeContext();
 
   const getSizeStyles = () => {
     switch (size) {

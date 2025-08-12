@@ -1,5 +1,5 @@
-import Dexie, { Table } from 'dexie';
-import { File, History } from '../../types';
+import Dexie, { type Table } from 'dexie';
+import { File, type History } from '../../types';
 
 export class AppDatabase extends Dexie {
   files!: Table<File>;
