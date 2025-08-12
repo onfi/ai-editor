@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { marked } from 'marked';
+import { configuredMarked as marked } from './marked';
 import { useEditorStore } from '../../stores/editorStore';
 import { useThemeContext } from '../../contexts/ThemeContext';
 
