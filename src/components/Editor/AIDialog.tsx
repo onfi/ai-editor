@@ -120,7 +120,7 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
       icon={<Sparkles />}
       maxWidth="lg"
     >
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* プロンプト入力 */}
         <div>
           <textarea
@@ -135,20 +135,20 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
             }}
             placeholder="AIへの指示入力してください..."
             rows={4}
-            className={`mt-2 w-full rounded-md border ${colors.border} ${colors.bgSecondary} ${colors.text} px-3 py-2 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-25`}
+            className={`w-full rounded-md border ${colors.border} ${colors.bgSecondary} ${colors.text} px-4 py-3 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-25`}
           />
         </div>
 
         {/* エラー表示 */}
         {error && (
-          <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-3">
+          <div className="rounded-lg bg-red-50 dark:bg-red-900/20 p-4">
             <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
           </div>
         )}
 
         {/* APIキー警告 */}
         {!geminiApiKey && (
-          <div className="rounded-md bg-yellow-50 dark:bg-yellow-900/20 p-3">
+          <div className="rounded-lg bg-yellow-50 dark:bg-yellow-900/20 p-4">
             <p className="text-sm text-yellow-700 dark:text-yellow-400">
               Gemini APIキーが設定されていません。設定画面で設定してください。
             </p>
@@ -156,12 +156,12 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
         )}
 
         {/* ボタン群 */}
-        <div className="flex gap-3 pt-4">
+        <div className="flex gap-3 pt-6">
           <>
             <button
               type="submit"
               disabled={loading || !prompt.trim() || !geminiApiKey}
-              className="flex-1 inline-flex justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 inline-flex justify-center rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? '生成中...' : '生成 (Ctrl+Enter)'}
             </button>

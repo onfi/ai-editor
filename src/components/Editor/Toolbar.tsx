@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Search, Undo, Redo } from 'lucide-react';
 import { EditorView } from 'codemirror';
+import { undo, redo, undoDepth, redoDepth } from '@codemirror/commands';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import { AIDialog } from './AIDialog';
 import { IconButton } from '../UI/IconButton';
@@ -16,19 +17,19 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editorView, onSearchClick, onA
 
   const handleUndo = () => {
     if (editorView) {
-      editorView.dispatch({
-        effects: EditorView.announce.of('Undo'),
-      });
+      undo(editorView);
     }
   };
 
   const handleRedo = () => {
     if (editorView) {
-      editorView.dispatch({
-        effects: EditorView.announce.of('Redo'),
-      });
+      redo(editorView);
     }
   };
+
+  // Undo/Redoが利用可能かどうかをチェック
+  const canUndo = editorView ? undoDepth(editorView.state) > 0 : false;
+  const canRedo = editorView ? redoDepth(editorView.state) > 0 : false;
 
   return (
     <>
@@ -47,11 +48,13 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editorView, onSearchClick, onA
           icon={Undo}
           onClick={handleUndo}
           title="元に戻す"
+          disabled={!canUndo}
         />
         <IconButton
           icon={Redo}
           onClick={handleRedo}
           title="やり直す"
+          disabled={!canRedo}
         />
       </div>
     </>

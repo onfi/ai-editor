@@ -4,6 +4,8 @@ import { EditorState } from '@codemirror/state';
 import { markdown } from '@codemirror/lang-markdown';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { lineNumbers } from '@codemirror/view';
+import { history, historyKeymap } from '@codemirror/commands';
+import { keymap } from '@codemirror/view';
 import { useEditorStore } from '../../stores/editorStore';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import { Toolbar } from './Toolbar';
@@ -40,6 +42,8 @@ export const TextEditor: React.FC = () => {
       minimalSetup,
       lineNumbers(),
       markdown(),
+      history(),
+      keymap.of([...historyKeymap]),
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           setContent(update.state.doc.toString());
