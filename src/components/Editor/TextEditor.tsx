@@ -95,7 +95,7 @@ export const TextEditor: React.FC = () => {
   }, [content]);
 
   return (
-    <div className={`flex flex-col h-full p-0 ${colors.bg}`}>
+    <div className={`flex flex-col p-0 ${colors.bg}`}>
       <Toolbar 
         editorView={viewRef.current} 
         onSearchClick={() => setIsSearchOpen(true)}
@@ -107,7 +107,7 @@ export const TextEditor: React.FC = () => {
           isOpen={isSearchOpen} 
           onClose={() => setIsSearchOpen(false)} 
         />
-        <div ref={editorRef} className={`h-full overflow-auto ${colors.bg}`} />
+        <div ref={editorRef} className={`mt-16 mb-20 h-full overflow-auto ${colors.bg}`} />
       </div>
       {isAIDialogOpen && (
         <AIDialog

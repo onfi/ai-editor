@@ -31,11 +31,11 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({
   };
 
   return (
-    <div className={`flex flex-col h-screen ${colors.bg} ${colors.text}`}>
-      <div className="flex-1 overflow-auto mt-16">
+    <div className={`flex flex-col ${colors.bg} ${colors.text}`}>
+      <div className="h-full overflow-y-auto mb-16">
         {renderView()}
       </div>
-      <div className={`flex border-t ${colors.border} ${colors.bgSecondary}`}>
+      <div className={`flex border-t fixed bottom-0 left-0 right-0 ${colors.border} ${colors.bgSecondary}`}>
         <button
           onClick={() => setCurrentView('fileTree')}
           className={`flex-1 p-4 flex flex-col items-center gap-1 transition-colors ${

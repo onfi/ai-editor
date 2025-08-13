@@ -20,7 +20,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
         {fileTree}
       </div>
       <div className="flex-1 flex">
-        <div className={`w-[45vw] border-r ${colors.border} overflow-auto mt-16`}>
+        <div className={`w-[45vw] border-r ${colors.border} overflow-auto`}>
           {editor}
         </div>
         <div className={`p-8 flex-1 overflow-auto pt-0 mt-16`}>
