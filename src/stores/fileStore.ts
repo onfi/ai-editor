@@ -184,9 +184,16 @@ class FileDatabase {
 
     file.history = data.history || [];
 
-    if (data.children) {
+    // Initialize children if it's a directory
+    if (file.type === 'directory') {
       file.children = {};
+    }
+
+    if (data.children) {
       Object.entries(data.children).forEach(([name, childData]) => {
+        // Now file.children is guaranteed to be initialized if file.type is 'directory'
+        // If file.type is 'file', data.children should not exist, but if it does,
+        // this would be an issue. Assuming data.children only exists for directories.
         file.children![name] = this.deserializeFileFromStorage(childData, file);
       });
     }

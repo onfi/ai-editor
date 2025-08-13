@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronUp, ChevronDown, X } from 'lucide-react';
+import { Search, ChevronUp, ChevronDown } from 'lucide-react';
 import { EditorView } from 'codemirror';
 import { Modal } from '../UI/Modal';
 import { useThemeContext } from '../../contexts/ThemeContext';
@@ -265,7 +265,7 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ editorView, onClose 
           
           <button
             onClick={() => setShowReplace(!showReplace)}
-            className={`text-sm ${colors.link} hover:underline`}
+            className={`text-sm ${colors.text} hover:underline`}
           >
             {showReplace ? '置換を隠す' : '置換を表示'}
           </button>

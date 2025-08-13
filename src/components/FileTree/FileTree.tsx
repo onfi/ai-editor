@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, FolderPlus, Settings } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFileStore } from '../../stores/fileStore';
 import { useEditorStore } from '../../stores/editorStore';
 import { useThemeContext } from '../../contexts/ThemeContext';

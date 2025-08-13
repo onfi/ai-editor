@@ -6,14 +6,10 @@ import { useSettingsStore } from '../stores/settingsStore';
 
 export const SettingsPage: React.FC = () => {
   const { theme, setTheme, colors } = useThemeContext();
-  const { geminiApiKey, setGeminiApiKey, autoSaveInterval, setAutoSaveInterval } = useSettingsStore();
+  const { geminiApiKey, setGeminiApiKey } = useSettingsStore();
 
   const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGeminiApiKey(e.target.value);
-  };
-
-  const handleIntervalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAutoSaveInterval(Number(e.target.value));
   };
 
   const themeOptions = [

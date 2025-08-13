@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Sparkles, Search, Undo, Redo } from 'lucide-react';
 import { EditorView } from 'codemirror';
 import { undo, redo, undoDepth, redoDepth } from '@codemirror/commands';
 import { useThemeContext } from '../../contexts/ThemeContext';
-import { AIDialog } from './AIDialog';
 import { IconButton } from '../UI/IconButton';
 
 interface ToolbarProps {
