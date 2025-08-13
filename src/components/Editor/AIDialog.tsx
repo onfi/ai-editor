@@ -161,9 +161,15 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
             <button
               type="submit"
               disabled={loading || !prompt.trim() || !geminiApiKey}
-              className="flex-1 inline-flex justify-center rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              className={`relative flex-1 inline-flex justify-center rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed overflow-hidden transition-colors ${
+                loading
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-700 bg-[length:200%_100%] animate-progress-7s'
+                  : 'bg-blue-600 hover:bg-blue-700'
+              }`}
             >
-              {loading ? '生成中...' : '生成 (Ctrl+Enter)'}
+              <span className="relative z-10">
+                {loading ? '生成中...' : '生成 (Ctrl+Enter)'}
+              </span>
             </button>
           </>
         </div>

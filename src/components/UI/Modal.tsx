@@ -66,7 +66,7 @@ export const Modal: React.FC<ModalProps> = ({
       role="dialog"
       aria-modal="true"
     >
-      <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+      <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-start sm:pt-10 sm:pb-4 sm:px-4">
         {/* 背景オーバーレイ */}
         <div
           className={`fixed inset-0 bg-black bg-opacity-10 backdrop-blur-md transition-opacity duration-300 ${

@@ -5,6 +5,17 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    extend: {
+      keyframes: {
+        'progress-bar': {
+          '0%': { 'background-position': '100% 0' },
+          '100%': { 'background-position': '0 0' },
+        },
+      },
+      animation: {
+        'progress-7s': 'progress-bar 7s linear forwards',
+      },
+    },
   },
   plugins: [
     require('@tailwindcss/typography'),
