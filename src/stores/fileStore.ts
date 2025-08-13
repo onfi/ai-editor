@@ -169,6 +169,7 @@ class FileDatabase {
         const serializedChild = this.serializeFileForStorage(child);
         if(serializedChild) {
           serialized.children![name] = serializedChild;
+        }
       });
     }
 
