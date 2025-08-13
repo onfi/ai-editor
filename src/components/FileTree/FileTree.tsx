@@ -65,7 +65,7 @@ export const FileTree: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className={`flex items-center gap-1 px-4 py-2 border-b ${colors.border} ${colors.bgSecondary}`}>
+      <div className={`flex items-center gap-1 px-4 py-2 h-16 border-b ${colors.border} ${colors.bgSecondary}`}>
         <IconButton
           icon={Plus}
           onClick={handleCreateFile}

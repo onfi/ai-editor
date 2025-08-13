@@ -3,6 +3,7 @@ import type { Settings } from '../types/index';
 
 interface SettingsState extends Settings {
   currentView: 'editor' | 'preview' | 'fileTree';
+  isLoaded: boolean; // 追加
   setGeminiApiKey: (key: string) => void;
   setAutoSaveInterval: (interval: number) => void;
   setCurrentView: (view: 'editor' | 'preview' | 'fileTree') => void;
@@ -87,7 +88,7 @@ const initializeSettings = async (): Promise<Partial<SettingsState>> => {
 export const useSettingsStore = create<SettingsState>()((set, get) => {
   // 初期化
   initializeSettings().then(initialSettings => {
-    set(initialSettings);
+    set({ ...initialSettings, isLoaded: true });
   });
 
   const saveSettings = () => {
@@ -100,6 +101,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => {
     geminiApiKey: '',
     autoSaveInterval: 60000,
     currentView: 'editor',
+    isLoaded: false, // 追加
     setGeminiApiKey: (key) => {
       set({ geminiApiKey: key });
       setTimeout(saveSettings, 0);

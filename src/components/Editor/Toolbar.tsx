@@ -33,7 +33,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editorView, onSearchClick, onA
 
   return (
     <>
-      <div className={`flex items-center gap-1 px-4 py-2 border-b ${colors.border} ${colors.bgSecondary}`}>
+      <div className={`flex items-center gap-1 px-4 py-2 border-b ${colors.border} ${colors.bgSecondary} fixed top-0 w-full z-10 h-16`}>
         <IconButton
           icon={Sparkles}
           onClick={onAIClick}

@@ -4,6 +4,7 @@ import { File, type SerializedFile, type FileStateData } from '../types/index';
 interface FileState {
   rootFile: File;
   expandedFolders: Set<File>;
+  isLoaded: boolean; // 追加
   addFile: (file: Omit<File, 'parent' | 'getPath'>, parentPath?: string) => void;
   updateFile: (file: File, updates: Partial<Omit<File, 'parent' | 'children' | 'getPath'>>) => void;
   deleteFile: (file: File) => void;
@@ -210,7 +211,7 @@ const initializeStore = async (): Promise<{ rootFile: File; expandedFolders: Set
 export const useFileStore = create<FileState>()((set, get) => {
   // 初期化
   initializeStore().then(initialState => {
-    set(initialState);
+    set({ ...initialState, isLoaded: true });
   });
 
   const saveState = () => {
@@ -221,6 +222,7 @@ export const useFileStore = create<FileState>()((set, get) => {
   return {
     rootFile: createInitialRoot(),
     expandedFolders: new Set<File>(),
+    isLoaded: false, // 追加
 
     addFile: (fileData, parentPath = '') => set((state) => {
       const parent = findFileByPath(state.rootFile, parentPath) || state.rootFile;

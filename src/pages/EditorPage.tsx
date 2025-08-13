@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DesktopLayout } from '../components/Layout/DesktopLayout';
 import { MobileLayout } from '../components/Layout/MobileLayout';
 import { TextEditor } from '../components/Editor/TextEditor';
@@ -7,12 +7,15 @@ import { MarkdownPreview } from '../components/Preview/MarkdownPreview';
 import { FileTree } from '../components/FileTree/FileTree';
 import { useFileStore } from '../stores/fileStore';
 import { useEditorStore } from '../stores/editorStore';
+import { useSettingsStore } from '../stores/settingsStore';
 
 export const EditorPage: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
-  const { getFile } = useFileStore();
+  const { getFile, rootFile, addFile, isLoaded: filesLoaded } = useFileStore();
   const { setCurrentFile, setContent, currentFile } = useEditorStore();
+  const { geminiApiKey, isLoaded: settingsLoaded } = useSettingsStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkMobile = () => {
@@ -25,8 +28,12 @@ export const EditorPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (!filesLoaded) return; // ファイルストアがロードされるまで待つ
+
     // URLのハッシュからファイルパスを取得
     const hash = location.hash;
+    let fileFound = false;
+
     if (hash.length > 1) { // ハッシュが存在する場合
       const filePath = decodeURIComponent(hash.substring(1)); // '#'を除去
       // パスの先頭がrootの場合は除去（rootFile.getPath()がrootから始まるため）
@@ -35,9 +42,44 @@ export const EditorPage: React.FC = () => {
       if (file && file.type === 'file') {
         setCurrentFile(file);
         setContent(file.content);
+        fileFound = true;
       }
     }
-  }, [location.hash, getFile, setCurrentFile, setContent]);
+
+    // ファイルが指定されていない、または存在しない場合
+    if (!fileFound) {
+      const rootFiles = rootFile.children ? Object.values(rootFile.children) : [];
+      if (rootFiles.length > 0) {
+        // 一番上のファイルを選択
+        const firstFile = rootFiles[0];
+        if (firstFile.type === 'file') {
+          setCurrentFile(firstFile);
+          setContent(firstFile.content);
+        } else if (firstFile.type === 'directory' && firstFile.children && Object.values(firstFile.children).length > 0) {
+          // 最初のディレクトリの最初のファイルを選択
+          const firstFileInDir = Object.values(firstFile.children)[0];
+          if (firstFileInDir.type === 'file') {
+            setCurrentFile(firstFileInDir);
+            setContent(firstFileInDir.content);
+          }
+        }
+      } else {
+        // ファイルが0個の場合、1件自動的に追加
+        const now = new Date();
+        const newFile = {
+          name: 'untitled.md',
+          content: '',
+          type: 'file' as const,
+          createdAt: now,
+          updatedAt: now,
+          history: [],
+        };
+        addFile(newFile, ''); // ルートにファイルを追加
+        setCurrentFile(newFile);
+        setContent('');
+      }
+    }
+  }, [location.hash, getFile, setCurrentFile, setContent, rootFile, addFile, filesLoaded]);
 
   useEffect(() => {
     if (currentFile) {
@@ -46,6 +88,12 @@ export const EditorPage: React.FC = () => {
       document.title = 'AI Note';
     }
   }, [currentFile]);
+
+  useEffect(() => {
+    if (settingsLoaded && !geminiApiKey) {
+      navigate('/settings');
+    }
+  }, [geminiApiKey, navigate, settingsLoaded]);
 
   const editor = <TextEditor />;
   const preview = <MarkdownPreview />;

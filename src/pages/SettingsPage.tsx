@@ -99,31 +99,7 @@ export const SettingsPage: React.FC = () => {
             </div>
           </section>
 
-          {/* 自動保存設定 */}
-          <section>
-            <h2 className={`text-lg font-semibold mb-4 ${colors.text}`}>自動保存</h2>
-            <div className={`p-6 rounded-lg ${colors.bgSecondary} ${colors.border}`}>
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="auto-save" className={`block text-sm font-medium mb-2 ${colors.text}`}>
-                    自動保存間隔（秒）
-                  </label>
-                  <input
-                    id="auto-save"
-                    type="number"
-                    min="10"
-                    max="300"
-                    value={autoSaveInterval / 1000}
-                    onChange={handleIntervalChange}
-                    className={`w-32 px-4 py-2 rounded-lg border ${colors.bg} ${colors.border} ${colors.text} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                  />
-                </div>
-                <p className={`text-sm ${colors.textMuted}`}>
-                  10秒〜300秒の範囲で設定できます。
-                </p>
-              </div>
-            </div>
-          </section>
+          
         </div>
       </div>
     </div>
