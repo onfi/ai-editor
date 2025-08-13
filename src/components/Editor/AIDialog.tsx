@@ -56,22 +56,39 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
       }
       const result = response.text;
       let insertPos = cursorPosition;
+      let selectionStart: number;
+      let selectionEnd: number;
       
       if (selectedText) {
         // 選択テキストを置換
+        selectionStart = selectedText.start;
+        selectionEnd = selectedText.start + result.length;
+        
         editorView.dispatch({
           changes: {
             from: selectedText.start,
             to: selectedText.end,
             insert: result
+          },
+          selection: {
+            anchor: selectionStart,
+            head: selectionEnd
           }
         });
       } else {
         // カーソル位置に挿入
+        const insertText = "\n" + result + "\n";
+        selectionStart = insertPos + 1; // \n の後から選択開始
+        selectionEnd = insertPos + 1 + result.length; // result の終わりまで選択
+        
         editorView.dispatch({
           changes: {
             from: insertPos,
-            insert: "\n" + result + "\n"
+            insert: insertText
+          },
+          selection: {
+            anchor: selectionStart,
+            head: selectionEnd
           }
         });
       }
