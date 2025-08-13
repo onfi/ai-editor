@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, FolderPlus, Settings } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFileStore } from '../../stores/fileStore';
 import { useEditorStore } from '../../stores/editorStore';
 import { useThemeContext } from '../../contexts/ThemeContext';
@@ -10,6 +10,7 @@ import { IconButton } from '../UI/IconButton';
 export const FileTree: React.FC = () => {
   const { rootFile, addFile } = useFileStore();
   const { colors } = useThemeContext();
+  const navigate = useNavigate();
 
   const handleCreateFile = () => {
     const { currentFile } = useEditorStore.getState();
@@ -64,31 +65,22 @@ export const FileTree: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className={`flex items-center justify-end px-4 py-3 ${colors.border} ${colors.bgSecondary}`}>
-        <div className="flex items-center gap-1">
-          <IconButton
-            icon={Plus}
-            onClick={handleCreateFile}
-            variant="tertiary"
-            size="small"
-            title="新規ファイル"
-          />
-          <IconButton
-            icon={FolderPlus}
-            onClick={handleCreateDirectory}
-            variant="tertiary"
-            size="small"
-            title="新規フォルダ"
-          />
-          <Link to="/settings">
-            <IconButton
-              icon={Settings}
-              variant="tertiary"
-              size="small"
-              title="設定"
-            />
-          </Link>
-        </div>
+      <div className={`flex items-center gap-1 px-4 py-2 border-b ${colors.border} ${colors.bgSecondary}`}>
+        <IconButton
+          icon={Plus}
+          onClick={handleCreateFile}
+          title="新規ファイル"
+        />
+        <IconButton
+          icon={FolderPlus}
+          onClick={handleCreateDirectory}
+          title="新規フォルダ"
+        />
+        <IconButton
+          icon={Settings}
+          onClick={() => navigate('/settings')}
+          title="設定"
+        />
       </div>
       
       <div className={`flex-1 overflow-auto ${colors.bg}`}>

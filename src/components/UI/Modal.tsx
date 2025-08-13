@@ -69,8 +69,8 @@ export const Modal: React.FC<ModalProps> = ({
       <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
         {/* 背景オーバーレイ */}
         <div
-          className={`fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md transition-opacity duration-300 ${
-            isOpen ? 'opacity-100' : 'opacity-0'
+          className={`fixed inset-0 bg-black bg-opacity-10 backdrop-blur-md transition-opacity duration-300 ${
+            isOpen ? 'opacity-60' : 'opacity-0'
           }`}
           onClick={handleBackdropClick}
           aria-hidden="true"
@@ -87,7 +87,7 @@ export const Modal: React.FC<ModalProps> = ({
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <div className="p-8 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
               {/* アイコン */}
               {icon && (

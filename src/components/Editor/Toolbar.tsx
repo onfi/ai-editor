@@ -3,6 +3,7 @@ import { Sparkles, Undo, Redo } from 'lucide-react';
 import { EditorView } from 'codemirror';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import { AIDialog } from './AIDialog';
+import { IconButton } from '../UI/IconButton';
 
 interface ToolbarProps {
   editorView: EditorView | null;
@@ -30,28 +31,22 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editorView }) => {
 
   return (
     <>
-      <div className={`flex items-center gap-1 px-4 py-2 ${colors.border} ${colors.bgSecondary}`}>
-        <button
+      <div className={`flex items-center gap-1 px-4 py-2 border-b ${colors.border} ${colors.bgSecondary}`}>
+        <IconButton
+          icon={Sparkles}
           onClick={() => setShowAIDialog(true)}
-          className={`p-1.5 rounded transition-colors ${colors.button}`}
           title="AIアシスト"
-        >
-          <Sparkles size={16} />
-        </button>
-        <button
+        />
+        <IconButton
+          icon={Undo}
           onClick={handleUndo}
-          className={`p-1.5 rounded transition-colors ${colors.button}`}
-          title="元に戻す"
-        >
-          <Undo size={16} />
-        </button>
-        <button
+          title="AIアシスト"
+        />
+        <IconButton
+          icon={Redo}
           onClick={handleRedo}
-          className={`p-1.5 rounded transition-colors ${colors.button}`}
           title="やり直す"
-        >
-          <Redo size={16} />
-        </button>
+        />
       </div>
       {showAIDialog && (
         <AIDialog

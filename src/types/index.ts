@@ -42,3 +42,18 @@ export interface Settings {
   geminiApiKey: string;
   autoSaveInterval: number; // デフォルト: 60000 (1分)
 }
+
+export interface SerializedFile {
+  name: string;
+  content: string;
+  type: 'file' | 'directory';
+  createdAt: Date;
+  updatedAt: Date;
+  history: History[];
+  children?: { [fileName: string]: SerializedFile };
+}
+
+export interface FileStateData {
+  rootFile: SerializedFile;
+  expandedPaths: string[];
+}

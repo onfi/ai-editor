@@ -101,7 +101,7 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="AIへの指示入力してください..."
             rows={4}
-            className={`w-full rounded-md border ${colors.border} ${colors.bgSecondary} ${colors.text} px-3 py-2 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-25`}
+            className={`mt-2 w-full rounded-md border ${colors.border} ${colors.bgSecondary} ${colors.text} px-3 py-2 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-25`}
             autoFocus
           />
         </div>
@@ -131,14 +131,6 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
               className="flex-1 inline-flex justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? '生成中...' : '生成'}
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={loading}
-              className={`px-3 py-2 text-sm font-semibold rounded-md border ${colors.border} ${colors.bgSecondary} ${colors.text} hover:${colors.bgTertiary} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors`}
-            >
-              キャンセル
             </button>
           </>
         </div>

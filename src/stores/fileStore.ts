@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { File } from '../types/index';
+import { File, type SerializedFile, type FileStateData } from '../types/index';
 
 interface FileState {
   rootFile: File;
@@ -126,7 +126,7 @@ class FileDatabase {
       const transaction = db.transaction(STORE_NAME, 'readonly');
       const store = transaction.objectStore(STORE_NAME);
       
-      const data = await new Promise<any>((resolve, reject) => {
+      const data = await new Promise<FileStateData | undefined>((resolve, reject) => {
         const request = store.get('state');
         request.onerror = () => reject(request.error);
         request.onsuccess = () => resolve(request.result);
@@ -151,8 +151,8 @@ class FileDatabase {
     }
   }
 
-  private serializeFileForStorage(file: File): any {
-    const serialized: any = {
+  private serializeFileForStorage(file: File): SerializedFile {
+    const serialized: SerializedFile = {
       name: file.name,
       content: file.content,
       type: file.type,
@@ -171,7 +171,7 @@ class FileDatabase {
     return serialized;
   }
 
-  private deserializeFileFromStorage(data: any, parent?: File): File {
+  private deserializeFileFromStorage(data: SerializedFile, parent?: File): File {
     const file = new File({
       name: data.name,
       content: data.content,

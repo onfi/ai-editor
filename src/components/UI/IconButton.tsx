@@ -19,17 +19,17 @@ export const IconButton: React.FC<IconButtonProps> = ({
     ? 'opacity-40 cursor-not-allowed pointer-events-none' 
     : 'cursor-pointer active:scale-95';
 
-  const baseStyles = 'px-2 py-2 text-gray-600 rounded hover:bg-gray-200 transition-colors flex items-center justify-center relative';
-
   return (
     <button
       onClick={disabled ? undefined : onClick}
-      className={`${baseStyles} ${disabledStyles} ${className}`}
+      className={`inline-block p-8 text-gray-600 rounded bg-transparent border-0 hover:bg-gray-200 transition-colors relative ${disabledStyles} ${className}`}
       title={title}
       disabled={disabled}
       type="button"
     >
-      <Icon size={24} />
+      <div style={{ padding: '10px' }}>
+        <Icon size={24} />
+      </div>
     </button>
   );
 };
