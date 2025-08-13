@@ -35,20 +35,19 @@ export class GeminiService {
     const content: Content[] = [];
     const { prompt, prevText, selectedText, afterText } = request;
 
-    content.push({ role: 'model', parts: [{ text: 'あなたは優秀なマークダウン生成AIです。マークダウン生成のみを行い、その他のテキストは生成しないでください。' }] });
-    
-    if (prevText) {
-      content.push({ role: 'model', parts: [{ text: `下記の文章から自然に繋がるようにしてください\n\n${prevText}` }] });
+    let systemPrompt = 'あなたは大人気のnote執筆者です。指示に従いマークダウン生成のみを行い、その他のテキストは生成しないでください。';
+    if(prevText || afterText) {
+      systemPrompt += `\n\n下記の書きかけのテキストの{ここに生成}に入れる文章を生成してください。\n\n---\n\n${prevText}\n\n{ここに生成}\n\n${afterText}`
     }
-    if (afterText) {
-      content.push({ role: 'model', parts: [{ text: `生成したテキストに下記の文章が続きます。自然に繋がるようにしてください\n\n${afterText}` }] });
-    }
-    if (selectedText) {
-      content.push({ role: 'model', parts: [{ text: `下記のテキストをユーザーの指示に従いマークダウンを修正してください。ユーザーから文字数の指示がない場合、文字数は100文字以上増やさないでください\n\n${selectedText}` }] });
+    content.push({ role: 'user', parts: [{ text: systemPrompt }] });
+
+    content.push({ role: 'model', parts: [{ text: `承知しました。指示をどうぞ。` }] });
+
+    if(selectedText) {
+      content.push({ role: 'user', parts: [{ text: prompt + `\n\n下記の---以降の文章を元に生成してください。\n\n---\n\n${selectedText}` }] });
     } else {
-      content.push({ role: 'model', parts: [{ text: `ユーザーの指示に従い、マークダウンを生成してください。ユーザーから文字数の指示がない場合、100文字程度にしてください` }] });
+      content.push({ role: 'user', parts: [{ text: prompt }] });
     }
-    content.push({ role: 'user', parts: [{ text: prompt }] });
     return content;
   }
 

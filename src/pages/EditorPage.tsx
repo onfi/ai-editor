@@ -41,9 +41,9 @@ export const EditorPage: React.FC = () => {
 
   useEffect(() => {
     if (currentFile) {
-      document.title = `${currentFile.name} | AI Editor`;
+      document.title = `${currentFile.name} | AI Note`;
     } else {
-      document.title = 'AI Editor';
+      document.title = 'AI Note';
     }
   }, [currentFile]);
 
