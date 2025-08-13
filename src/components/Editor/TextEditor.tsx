@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { EditorView, minimalSetup } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 import { markdown } from '@codemirror/lang-markdown';
@@ -7,12 +7,26 @@ import { lineNumbers } from '@codemirror/view';
 import { useEditorStore } from '../../stores/editorStore';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import { Toolbar } from './Toolbar';
+import { SearchBar } from './SearchBar';
 
 export const TextEditor: React.FC = () => {
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { content, setContent, setCursorPosition, setSelectedText } = useEditorStore();
   const { colors, isDark } = useThemeContext();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   useEffect(() => {
     if (!editorRef.current) return;
@@ -72,8 +86,15 @@ export const TextEditor: React.FC = () => {
 
   return (
     <div className={`flex flex-col h-full ${colors.bg}`}>
-      <Toolbar editorView={viewRef.current} />
-      <div ref={editorRef} className={`flex-1 overflow-auto ${colors.bg} p-4`} />
+      <Toolbar editorView={viewRef.current} onSearchClick={() => setIsSearchOpen(true)} />
+      <div className="relative flex-1">
+        <SearchBar 
+          editorView={viewRef.current} 
+          isOpen={isSearchOpen} 
+          onClose={() => setIsSearchOpen(false)} 
+        />
+        <div ref={editorRef} className={`h-full overflow-auto ${colors.bg} p-4`} />
+      </div>
     </div>
   );
 };

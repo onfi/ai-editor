@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Undo, Redo } from 'lucide-react';
+import { Sparkles, Search, Undo, Redo } from 'lucide-react';
 import { EditorView } from 'codemirror';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import { AIDialog } from './AIDialog';
@@ -7,9 +7,10 @@ import { IconButton } from '../UI/IconButton';
 
 interface ToolbarProps {
   editorView: EditorView | null;
+  onSearchClick: () => void;
 }
 
-export const Toolbar: React.FC<ToolbarProps> = ({ editorView }) => {
+export const Toolbar: React.FC<ToolbarProps> = ({ editorView, onSearchClick }) => {
   const [showAIDialog, setShowAIDialog] = useState(false);
   const { colors } = useThemeContext();
 
@@ -38,9 +39,14 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editorView }) => {
           title="AIアシスト"
         />
         <IconButton
+          icon={Search}
+          onClick={onSearchClick}
+          title="検索 (Ctrl+F)"
+        />
+        <IconButton
           icon={Undo}
           onClick={handleUndo}
-          title="AIアシスト"
+          title="元に戻す"
         />
         <IconButton
           icon={Redo}
