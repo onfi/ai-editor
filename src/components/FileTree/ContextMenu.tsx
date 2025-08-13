@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Edit, Copy, Trash } from 'lucide-react';
-import type { File } from '../../types/index';
+import { File } from '../../types/index';
 import { useFileStore } from '../../stores/fileStore';
 
 interface ContextMenuProps {
@@ -34,14 +34,14 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ file, position, onClos
 
   const handleCopy = () => {
     const now = new Date();
-    const copyFile = {
+    const copyFile = new File({
       name: `${file.name} (コピー)`,
       content: file.content,
       type: file.type,
       createdAt: now,
       updatedAt: now,
       history: [],
-    };
+    });
     
     const parentPath = file.parent ? file.parent.getPath() : '';
     addFile(copyFile, parentPath);

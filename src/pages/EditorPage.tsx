@@ -8,6 +8,7 @@ import { FileTree } from '../components/FileTree/FileTree';
 import { useFileStore } from '../stores/fileStore';
 import { useEditorStore } from '../stores/editorStore';
 import { useSettingsStore } from '../stores/settingsStore';
+import { File } from '../types/index';
 
 export const EditorPage: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -65,13 +66,13 @@ export const EditorPage: React.FC = () => {
         }
       } else {
         // ファイルが0個の場合、1件自動的に追加
-        const now = new Date();
         const newFile = new File({
           name: 'untitled.md',
           content: '',
           type: 'file',
-          createdAt: now,
-          updatedAt: now,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          history: [],
         });
         addFile(newFile, ''); // ルートにファイルを追加
         setCurrentFile(newFile);

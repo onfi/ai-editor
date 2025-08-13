@@ -1,11 +1,12 @@
 import { create } from 'zustand';
 import { File, type SerializedFile, type FileStateData } from '../types/index';
+import { C } from 'vitest/dist/chunks/reporters.d.BFLkQcL6.js';
 
 interface FileState {
   rootFile: File;
   expandedFolders: Set<File>;
   isLoaded: boolean; // 追加
-  addFile: (file: Omit<File, 'parent' | 'getPath'>, parentPath?: string) => void;
+  addFile: (file: File, parentPath?: string) => void;
   updateFile: (file: File, updates: Partial<Omit<File, 'parent' | 'children' | 'getPath'>>) => void;
   deleteFile: (file: File) => void;
   getFile: (path: string) => File | undefined;
@@ -165,7 +166,9 @@ class FileDatabase {
     if (file.children) {
       serialized.children = {};
       Object.entries(file.children).forEach(([name, child]) => {
-        serialized.children[name] = this.serializeFileForStorage(child);
+        const serializedChild = this.serializeFileForStorage(child);
+        if(serializedChild) {
+          serialized.children![name] = serializedChild;
       });
     }
 
@@ -189,12 +192,11 @@ class FileDatabase {
       file.children = {};
     }
 
-    if (data.children) {
+    if (data.children && file.type === 'directory') {
       Object.entries(data.children).forEach(([name, childData]) => {
-        // Now file.children is guaranteed to be initialized if file.type is 'directory'
-        // If file.type is 'file', data.children should not exist, but if it does,
-        // this would be an issue. Assuming data.children only exists for directories.
-        file.children![name] = this.deserializeFileFromStorage(childData, file);
+        if (file.children) {
+          file.children![name] = this.deserializeFileFromStorage(childData, file);
+        }
       });
     }
 
@@ -263,16 +265,13 @@ export const useFileStore = create<FileState>()((set, get) => {
       const existingNames = parent.children ? Object.keys(parent.children) : [];
       const uniqueName = generateUniqueName(fileData.name, existingNames);
       
-      const newFile = new File({
-        ...fileData,
-        name: uniqueName,
-        parent: parent === state.rootFile ? undefined : parent
-      });
+      fileData.name = uniqueName; // Update the name of the passed File instance
+      fileData.parent = parent === state.rootFile ? undefined : parent; // Set parent
       
       if (!parent.children) {
         parent.children = {};
       }
-      parent.children[newFile.name] = newFile;
+      parent.children[fileData.name] = fileData; // Add the passed File instance
       
       const newState = { rootFile: state.rootFile };
       setTimeout(saveState, 0);

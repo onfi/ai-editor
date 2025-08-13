@@ -6,6 +6,7 @@ import { useEditorStore } from '../../stores/editorStore';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import { TreeNode } from './TreeNode';
 import { IconButton } from '../UI/IconButton';
+import { File } from '../../types/index';
 
 export const FileTree: React.FC = () => {
   const { rootFile, addFile } = useFileStore();
@@ -25,14 +26,14 @@ export const FileTree: React.FC = () => {
     }
     
     const now = new Date();
-    const newFile = {
+    const newFile = new File({
       name: 'untitled.md',
       content: '',
-      type: 'file' as const,
+      type: 'file',
       createdAt: now,
       updatedAt: now,
       history: [],
-    };
+    });
     addFile(newFile, parentPath);
   };
 
@@ -49,14 +50,14 @@ export const FileTree: React.FC = () => {
     }
     
     const now = new Date();
-    const newDirectory = {
+    const newDirectory = new File({
       name: 'New Folder',
       content: '',
-      type: 'directory' as const,
+      type: 'directory',
       createdAt: now,
       updatedAt: now,
       history: [],
-    };
+    });
     addFile(newDirectory, parentPath);
   };
 

@@ -15,6 +15,7 @@ export class File {
     parent?: File;
     createdAt?: Date;
     updatedAt?: Date;
+    history?: History[]; // Add this line
   }) {
     this.name = data.name;
     this.content = data.content;
@@ -22,6 +23,7 @@ export class File {
     this.parent = data.parent;
     this.createdAt = data.createdAt || new Date();
     this.updatedAt = data.updatedAt || new Date();
+    this.history = data.history || []; // Add this line
     if (this.type === 'directory') {
       this.children = {};
     }
