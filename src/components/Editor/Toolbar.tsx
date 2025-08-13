@@ -8,10 +8,10 @@ import { IconButton } from '../UI/IconButton';
 interface ToolbarProps {
   editorView: EditorView | null;
   onSearchClick: () => void;
+  onAIClick: () => void;
 }
 
-export const Toolbar: React.FC<ToolbarProps> = ({ editorView, onSearchClick }) => {
-  const [showAIDialog, setShowAIDialog] = useState(false);
+export const Toolbar: React.FC<ToolbarProps> = ({ editorView, onSearchClick, onAIClick }) => {
   const { colors } = useThemeContext();
 
   const handleUndo = () => {
@@ -35,8 +35,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editorView, onSearchClick }) =
       <div className={`flex items-center gap-1 px-4 py-2 border-b ${colors.border} ${colors.bgSecondary}`}>
         <IconButton
           icon={Sparkles}
-          onClick={() => setShowAIDialog(true)}
-          title="AIアシスト"
+          onClick={onAIClick}
+          title="AIアシスト (Ctrl+I)"
         />
         <IconButton
           icon={Search}
@@ -54,12 +54,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editorView, onSearchClick }) =
           title="やり直す"
         />
       </div>
-      {showAIDialog && (
-        <AIDialog
-          editorView={editorView}
-          onClose={() => setShowAIDialog(false)}
-        />
-      )}
     </>
   );
 };

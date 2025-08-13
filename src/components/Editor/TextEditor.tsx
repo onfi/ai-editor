@@ -8,11 +8,13 @@ import { useEditorStore } from '../../stores/editorStore';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import { Toolbar } from './Toolbar';
 import { SearchBar } from './SearchBar';
+import { AIDialog } from './AIDialog';
 
 export const TextEditor: React.FC = () => {
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
   const { content, setContent, setCursorPosition, setSelectedText } = useEditorStore();
   const { colors, isDark } = useThemeContext();
 
@@ -21,6 +23,9 @@ export const TextEditor: React.FC = () => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
         setIsSearchOpen(true);
+      } else if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+        e.preventDefault();
+        setIsAIDialogOpen(true);
       }
     };
 
@@ -86,7 +91,11 @@ export const TextEditor: React.FC = () => {
 
   return (
     <div className={`flex flex-col h-full ${colors.bg}`}>
-      <Toolbar editorView={viewRef.current} onSearchClick={() => setIsSearchOpen(true)} />
+      <Toolbar 
+        editorView={viewRef.current} 
+        onSearchClick={() => setIsSearchOpen(true)}
+        onAIClick={() => setIsAIDialogOpen(true)}
+      />
       <div className="relative flex-1">
         <SearchBar 
           editorView={viewRef.current} 
@@ -95,6 +104,12 @@ export const TextEditor: React.FC = () => {
         />
         <div ref={editorRef} className={`h-full overflow-auto ${colors.bg} p-4`} />
       </div>
+      {isAIDialogOpen && (
+        <AIDialog
+          editorView={viewRef.current}
+          onClose={() => setIsAIDialogOpen(false)}
+        />
+      )}
     </div>
   );
 };

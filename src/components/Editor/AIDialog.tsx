@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles } from 'lucide-react';
 import { EditorView } from 'codemirror';
 import { useEditorStore } from '../../stores/editorStore';
@@ -19,6 +19,16 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
   const { content, selectedText, cursorPosition } = useEditorStore();
   const { geminiApiKey } = useSettingsStore();
   const { colors } = useThemeContext();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    // モーダルが開いた時にtextareaにフォーカスを当てる
+    const timer = setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 100); // モーダルのアニメーションが完了してからフォーカス
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,12 +124,18 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
         {/* プロンプト入力 */}
         <div>
           <textarea
+            ref={textareaRef}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
+            onKeyDown={(e) => {
+              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                handleSubmit(e as any);
+              }
+            }}
             placeholder="AIへの指示入力してください..."
             rows={4}
             className={`mt-2 w-full rounded-md border ${colors.border} ${colors.bgSecondary} ${colors.text} px-3 py-2 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-25`}
-            autoFocus
           />
         </div>
 
@@ -147,7 +163,7 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
               disabled={loading || !prompt.trim() || !geminiApiKey}
               className="flex-1 inline-flex justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? '生成中...' : '生成'}
+              {loading ? '生成中...' : '生成 (Ctrl+Enter)'}
             </button>
           </>
         </div>
