@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { File, type SerializedFile, type FileStateData } from '../types/index';
-import { C } from 'vitest/dist/chunks/reporters.d.BFLkQcL6.js';
 
 interface FileState {
   rootFile: File;
