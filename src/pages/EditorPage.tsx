@@ -27,8 +27,8 @@ export const EditorPage: React.FC = () => {
   useEffect(() => {
     // URLのハッシュからファイルパスを取得
     const hash = location.hash;
-    if (hash.startsWith('#file/')) {
-      const filePath = decodeURIComponent(hash.substring(6)); // '#file/'を除去
+    if (hash.length > 1) { // ハッシュが存在する場合
+      const filePath = decodeURIComponent(hash.substring(1)); // '#'を除去
       // パスの先頭がrootの場合は除去（rootFile.getPath()がrootから始まるため）
       const cleanPath = filePath.startsWith('root/') ? filePath.substring(5) : filePath;
       const file = getFile(cleanPath);

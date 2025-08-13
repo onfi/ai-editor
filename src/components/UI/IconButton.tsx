@@ -22,7 +22,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   return (
     <button
       onClick={disabled ? undefined : onClick}
-      className={`inline-block p-8 text-gray-600 rounded bg-transparent border-0 hover:bg-gray-200 transition-colors relative ${disabledStyles} ${className}`}
+      className={`inline-block p-1 text-gray-600 rounded bg-transparent border-0 hover:bg-gray-200 transition-colors relative ${disabledStyles} ${className}`}
       title={title}
       disabled={disabled}
       type="button"

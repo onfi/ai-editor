@@ -32,7 +32,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({
 
   return (
     <div className={`flex flex-col h-screen ${colors.bg} ${colors.text}`}>
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-auto">
         {renderView()}
       </div>
       <div className={`flex border-t ${colors.border} ${colors.bgSecondary}`}>

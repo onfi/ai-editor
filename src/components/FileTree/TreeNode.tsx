@@ -34,7 +34,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ file, level }) => {
       // ファイル選択時にURLを更新（ハッシュベース）
       const filePath = file.getPath();
       const cleanPath = filePath.startsWith('root/') ? filePath.substring(5) : filePath;
-      window.location.hash = `#file/${encodeURIComponent(cleanPath)}`;
+      window.location.hash = `#${encodeURIComponent(cleanPath)}`;
     }
   };
 

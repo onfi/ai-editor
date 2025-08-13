@@ -1,23 +1,21 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 html[data-theme="dark"] * {
-  color: white !important;
+  color: white;
 }
 
 html[data-theme="dark"] input,
 html[data-theme="dark"] textarea,
 html[data-theme="dark"] select {
-  color: white !important;
-  background-color: rgb(31 41 55) !important;
+  color: white;
+  background-color: rgb(31 41 55);
 }
 
 body {
   margin: 0;
   padding: 0;
+}
+
+.cm-gutterElement {
+  color: #AAAAAA; /* 薄い灰色 */
 }
 
 @import "tailwindcss";

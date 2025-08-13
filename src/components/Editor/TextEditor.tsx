@@ -44,6 +44,7 @@ export const TextEditor: React.FC = () => {
       markdown(),
       history(),
       keymap.of([...historyKeymap]),
+      EditorView.lineWrapping, // テキストの折り返しを有効にする
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           setContent(update.state.doc.toString());
@@ -94,7 +95,7 @@ export const TextEditor: React.FC = () => {
   }, [content]);
 
   return (
-    <div className={`flex flex-col h-full ${colors.bg}`}>
+    <div className={`flex flex-col h-full p-0 ${colors.bg}`}>
       <Toolbar 
         editorView={viewRef.current} 
         onSearchClick={() => setIsSearchOpen(true)}
@@ -106,7 +107,7 @@ export const TextEditor: React.FC = () => {
           isOpen={isSearchOpen} 
           onClose={() => setIsSearchOpen(false)} 
         />
-        <div ref={editorRef} className={`h-full overflow-auto ${colors.bg} p-4`} />
+        <div ref={editorRef} className={`h-full overflow-auto ${colors.bg}`} />
       </div>
       {isAIDialogOpen && (
         <AIDialog
