@@ -27,7 +27,7 @@ export const FileTree: React.FC = () => {
     
     const now = new Date();
     const newFile = new File({
-      name: 'untitled.md',
+      name: '新しいテキスト.md',
       content: '',
       type: 'file',
       createdAt: now,

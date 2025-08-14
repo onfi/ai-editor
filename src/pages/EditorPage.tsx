@@ -66,14 +66,14 @@ export const EditorPage: React.FC = () => {
         }
       } else {
         // ファイルが0個の場合、1件自動的に追加
-        const newFile = new File({
-          name: 'untitled.md',
-          content: '',
-          type: 'file',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          history: [],
-        });
+        const newFile: FileEntry = {
+        id: uuidv4(),
+        name: '新しいテキスト.md',
+        content: '',
+        path: '',
+        type: 'file',
+        isNew: true,
+      };
         addFile(newFile, ''); // ルートにファイルを追加
         setCurrentFile(newFile);
         setContent('');
