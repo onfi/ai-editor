@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Monitor, Moon, Sun } from 'lucide-react';
+import { Monitor, Moon, Sun } from 'lucide-react';
 import { useThemeContext } from '../contexts/ThemeContext';
 import { useSettingsStore } from '../stores/settingsStore';
 
@@ -23,7 +23,7 @@ export const SettingsPage: React.FC = () => {
       <div className={`${colors.bgSecondary} ${colors.border}`}>
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center gap-4">
-            <h1 className={`text-2xl font-bold ${colors.text}`}>気かきくエディタ</h1>
+            <h1 className={`text-2xl font-bold ${colors.text}`}>気がきくエディタ</h1>
           </div>
         </div>
       </div>

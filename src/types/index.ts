@@ -1,7 +1,12 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export class File {
+  id: string;
   name: string;
   content: string;
+  path: string;
   type: 'file' | 'directory';
+  isNew?: boolean;
   createdAt: Date;
   updatedAt: Date;
   parent?: File;
@@ -9,16 +14,22 @@ export class File {
   history: History[] = [];
 
   constructor(data: {
+    id?: string;
     name: string;
     content: string;
+    path?: string;
     type: 'file' | 'directory';
+    isNew?: boolean;
     parent?: File;
     createdAt?: Date;
     updatedAt?: Date;
     history?: History[]; // Add this line
   }) {
+    this.id = data.id || uuidv4();
     this.name = data.name;
     this.content = data.content;
+    this.path = data.path || '';
+    this.isNew = data.isNew || false;
     this.type = data.type;
     this.parent = data.parent;
     this.createdAt = data.createdAt || new Date();

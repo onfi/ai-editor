@@ -9,6 +9,7 @@ import { useFileStore } from '../stores/fileStore';
 import { useEditorStore } from '../stores/editorStore';
 import { useSettingsStore } from '../stores/settingsStore';
 import { File } from '../types/index';
+import { v4 as uuidv4 } from 'uuid';
 
 export const EditorPage: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -66,14 +67,14 @@ export const EditorPage: React.FC = () => {
         }
       } else {
         // ファイルが0個の場合、1件自動的に追加
-        const newFile: FileEntry = {
-        id: uuidv4(),
-        name: '新しいテキスト.md',
-        content: '',
-        path: '',
-        type: 'file',
-        isNew: true,
-      };
+        const newFile = new File({
+          id: uuidv4(),
+          name: '新しいテキスト.md',
+          content: '',
+          path: '',
+          type: 'file',
+          isNew: true,
+        });
         addFile(newFile, ''); // ルートにファイルを追加
         setCurrentFile(newFile);
         setContent('');
