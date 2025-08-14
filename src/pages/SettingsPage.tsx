@@ -23,43 +23,13 @@ export const SettingsPage: React.FC = () => {
       <div className={`${colors.bgSecondary} ${colors.border}`}>
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center gap-4">
-            <Link
-              to="/"
-              className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${colors.button}`}
-            >
-              <ArrowLeft size={16} />
-              エディターに戻る
-            </Link>
-            <h1 className={`text-2xl font-bold ${colors.text}`}>設定</h1>
+            <h1 className={`text-2xl font-bold ${colors.text}`}>気かきくエディタ</h1>
           </div>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-6 py-8">
         <div className="space-y-8">
-          {/* テーマ設定 */}
-          <section>
-            <h2 className={`text-lg font-semibold mb-4 ${colors.text}`}>テーマ</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {themeOptions.map((option) => {
-                const Icon = option.icon;
-                return (
-                  <button
-                    key={option.value}
-                    onClick={() => setTheme(option.value as any)}
-                    className={`flex items-center gap-3 p-4 rounded-lg border transition-colors ${
-                      theme === option.value
-                        ? `${colors.active} ${colors.text}`
-                        : `${colors.bgSecondary} ${colors.textSecondary} ${colors.hover} ${colors.border}`
-                    }`}
-                  >
-                    <Icon size={20} />
-                    <span className="font-medium">{option.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
 
           {/* AI設定 */}
           <section>
@@ -96,6 +66,37 @@ export const SettingsPage: React.FC = () => {
           </section>
 
           
+          {/* テーマ設定 */}
+          <section>
+            <h2 className={`text-lg font-semibold mb-4 ${colors.text}`}>テーマ</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {themeOptions.map((option) => {
+                const Icon = option.icon;
+                return (
+                  <button
+                    key={option.value}
+                    onClick={() => setTheme(option.value as any)}
+                    className={`flex items-center gap-3 p-4 rounded-lg border transition-colors ${
+                      theme === option.value
+                        ? `${colors.active} ${colors.text}`
+                        : `${colors.bgSecondary} ${colors.textSecondary} ${colors.hover} ${colors.border}`
+                    }`}
+                  >
+                    <Icon size={20} />
+                    <span className="font-medium">{option.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+          {geminiApiKey && 
+            <Link
+              to="/"
+              className={`flex items-center gap-2 px-3 py-2 rounded transition-colors bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 align-middle`}
+            >
+              OK
+            </Link>
+          }
         </div>
       </div>
     </div>

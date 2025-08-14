@@ -83,9 +83,9 @@ export const EditorPage: React.FC = () => {
 
   useEffect(() => {
     if (currentFile) {
-      document.title = `${currentFile.name} | AI Note`;
+      document.title = `${currentFile.name} | 気がきくエディタ`;
     } else {
-      document.title = 'AI Note';
+      document.title = '気がきくエディタ';
     }
   }, [currentFile]);
 
