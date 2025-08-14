@@ -35,16 +35,16 @@ export class GeminiService {
     const content: Content[] = [];
     const { prompt, prevText, selectedText, afterText } = request;
 
-    let systemPrompt = 'あなたは大人気のnote執筆者です。指示に従いマークダウン生成のみを行い、その他のテキストは生成しないでください。';
+    let systemPrompt = 'あなたは万人受けするゴーストライターです。プロンプトに沿った自然なテキスト生成を行います。あなたの応答やユーザーへの指示などは生成しないでください。';
     if(prevText || afterText) {
       systemPrompt += `\n\n下記の書きかけのテキストの{ここに生成}に入れる文章を生成してください。\n\n---\n\n${prevText}\n\n{ここに生成}\n\n${afterText}`
     }
     content.push({ role: 'user', parts: [{ text: systemPrompt }] });
 
-    content.push({ role: 'model', parts: [{ text: `承知しました。指示をどうぞ。` }] });
+    content.push({ role: 'model', parts: [{ text: `承知しました。プロンプトをどうぞ。` }] });
 
     if(selectedText) {
-      content.push({ role: 'user', parts: [{ text: prompt + `\n\n下記の---以降の文章を元に生成してください。\n\n---\n\n${selectedText}` }] });
+      content.push({ role: 'user', parts: [{ text: prompt + `\n\n下記の---以降の文章を変更してください。\n\n---\n\n${selectedText}` }] });
     } else {
       content.push({ role: 'user', parts: [{ text: prompt }] });
     }

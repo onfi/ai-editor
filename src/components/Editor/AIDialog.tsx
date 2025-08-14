@@ -6,6 +6,7 @@ import { useSettingsStore } from '../../stores/settingsStore';
 import { Modal } from '../UI/Modal';
 import { getGeminiService, type AIRequest } from '../../services/geminiService';
 import { useThemeContext } from '../../contexts/ThemeContext';
+import '../../styles/progress.css';
 
 interface AIDialogProps {
   editorView: EditorView | null;
@@ -158,19 +159,23 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
         {/* ボタン群 */}
         <div className="flex gap-3 pt-6">
           <>
-            <button
-              type="submit"
-              disabled={loading || !prompt.trim() || !geminiApiKey}
-              className={`relative flex-1 inline-flex justify-center rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed overflow-hidden transition-colors ${
-                loading
-                  ? 'bg-[length:200%_100%] animate-progress-7s'
-                  : 'bg-blue-600 hover:bg-blue-700'
-              }`}}
-            >
-              <span className="relative z-10">
-                {loading ? '生成中...' : '生成 (Ctrl+Enter)'}
-              </span>
-            </button>
+            { !loading && (
+              <button
+                type="submit"
+                disabled={loading || !prompt.trim() || !geminiApiKey}
+                className={`relative flex-1 inline-flex justify-center rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed overflow-hidden transition-colors bg-blue-600 hover:bg-blue-700}`}
+              >
+                <span className="relative z-10">
+                  生成 (Ctrl+Enter)
+                </span>
+              </button>
+            )}
+            { loading && (
+              <div className="progress">
+                  <div className="bar"></div>
+                  <span className="text">AI生成中</span>
+              </div>
+            )}
           </>
         </div>
       </form>
