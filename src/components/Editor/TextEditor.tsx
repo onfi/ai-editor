@@ -83,8 +83,31 @@ export const TextEditor: React.FC = () => {
 
     viewRef.current = view;
 
+    // 新しいクリックイベントハンドラ
+    const handleEditorClick = (event: MouseEvent) => {
+      if (viewRef.current) {
+        const pos = viewRef.current.posAtCoords({ x: event.clientX, y: event.clientY });
+        // クリックされた位置がドキュメントの範囲外（余白部分）であるか、または最終行以降であるかを判定
+        if (pos === null || pos >= viewRef.current.state.doc.length) {
+          const lastLine = viewRef.current.state.doc.lines - 1;
+          const lastLineEnd = viewRef.current.state.doc.line(lastLine).to;
+          viewRef.current.dispatch({
+            selection: { anchor: lastLineEnd },
+            scrollIntoView: true,
+          });
+          viewRef.current.focus();
+        }
+      }
+    };
+
+    editorRef.current.addEventListener('click', handleEditorClick);
+
     return () => {
       view.destroy();
+      // イベントリスナーのクリーンアップ
+      if (editorRef.current) {
+        editorRef.current.removeEventListener('click', handleEditorClick);
+      }
     };
   }, []);
 

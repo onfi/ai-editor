@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Edit, Copy, Trash } from 'lucide-react';
 import { File } from '../../types/index';
 import { useFileStore } from '../../stores/fileStore';
+import { useThemeContext } from '../../contexts/ThemeContext';
 
 interface ContextMenuProps {
   file: File;
@@ -12,6 +13,7 @@ interface ContextMenuProps {
 export const ContextMenu: React.FC<ContextMenuProps> = ({ file, position, onClose }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const { updateFile, deleteFile, addFile } = useFileStore();
+  const { colors } = useThemeContext();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -58,26 +60,26 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ file, position, onClos
   return (
     <div
       ref={menuRef}
-      className="fixed bg-gray-800 border border-gray-700 rounded-lg shadow-lg py-1 z-50"
+      className={`fixed ${colors.bg} ${colors.border} rounded-lg shadow-lg py-1 z-50`}
       style={{ left: position.x, top: position.y }}
     >
       <button
         onClick={handleRename}
-        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-700 w-full text-left text-sm"
+        className={`flex items-center gap-2 px-3 py-2 ${colors.hover} w-full text-left text-sm`}
       >
         <Edit size={14} />
         名前変更
       </button>
       <button
         onClick={handleCopy}
-        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-700 w-full text-left text-sm"
+        className={`flex items-center gap-2 px-3 py-2 ${colors.hover} w-full text-left text-sm`}
       >
         <Copy size={14} />
         コピー
       </button>
       <button
         onClick={handleDelete}
-        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-700 w-full text-left text-sm text-red-400"
+        className={`flex items-center gap-2 px-3 py-2 ${colors.hover} w-full text-left text-sm text-red-400`}
       >
         <Trash size={14} />
         削除
