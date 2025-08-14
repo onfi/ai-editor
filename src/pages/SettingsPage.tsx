@@ -89,13 +89,15 @@ export const SettingsPage: React.FC = () => {
               })}
             </div>
           </section>
-          {geminiApiKey && 
-            <Link
-              to="/"
-              className={`flex items-center gap-2 px-3 py-2 rounded transition-colors bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 align-middle`}
-            >
-              OK
-            </Link>
+          {geminiApiKey &&
+            <div className="flex justify-end mt-16">
+              <Link
+                to="/"
+                className={`flex items-center justify-center w-24 py-3 rounded font-semibold shadow-md transition-all bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              >
+                OK
+              </Link>
+            </div>
           }
         </div>
       </div>
