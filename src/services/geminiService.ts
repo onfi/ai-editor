@@ -33,9 +33,23 @@ export class GeminiService {
 
   private buildPrompt(request: AIRequest): Content[] {
     const content: Content[] = [];
-    const { prompt, prevText, selectedText, afterText } = request;
+    let { prompt, prevText, selectedText, afterText } = request;
 
-    let systemPrompt = 'あなたは万人受けするゴーストライターです。プロンプトに沿った自然なテキスト生成を行います。あなたの応答やユーザーへの指示などは生成しないでください。';
+    // 空白文字のトリム
+    prompt = prompt?.trim() || '';
+    prevText = prevText?.trim() || '';
+    selectedText = selectedText?.trim() || '';
+    afterText = afterText?.trim() || '';
+
+    // 文字数制限の適用
+    if (prevText.length > 1000) {
+      prevText = prevText.slice(-1000);
+    }
+    if (afterText.length > 1000) {
+      afterText = afterText.slice(0, 1000);
+    }
+
+    let systemPrompt = 'あなたは万人受けする文章を生成するゴーストライターです。プロンプトに沿った自然なテキスト生成を行います。あなたの応答やユーザーへの指示などは生成しないでください。';
     if(prevText || afterText) {
       systemPrompt += `\n\n下記の書きかけのテキストの{ここに生成}に入れる文章を生成してください。\n\n---\n\n${prevText}\n\n{ここに生成}\n\n${afterText}`
     }
