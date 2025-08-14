@@ -33,7 +33,7 @@ export const EditorPage: React.FC = () => {
     if (!filesLoaded) return; // ファイルストアがロードされるまで待つ
 
     // URLのハッシュからファイルパスを取得
-    const hash = location.hash;
+    const hash = window.location.hash;
     let fileFound = false;
 
     if (hash.length > 1) { // ハッシュが存在する場合
