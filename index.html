@@ -9,5 +9,15 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Google AdSenseスクリプトを環境変数が設定されている場合のみ読み込む
+      if (import.meta.env?.VITE_ADSENSE_CLIENT_ID) {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.VITE_ADSENSE_CLIENT_ID}`;
+        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+      }
+    </script>
   </body>
 </html>

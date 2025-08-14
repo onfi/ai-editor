@@ -6,6 +6,7 @@ import { useSettingsStore } from '../../stores/settingsStore';
 import { Modal } from '../UI/Modal';
 import { getGeminiService, type AIRequest } from '../../services/geminiService';
 import { useThemeContext } from '../../contexts/ThemeContext';
+import { GoogleAdSense } from '../UI/GoogleAdSense';
 import '../../styles/progress.css';
 
 interface AIDialogProps {
@@ -178,6 +179,9 @@ export const AIDialog: React.FC<AIDialogProps> = ({ editorView, onClose }) => {
             )}
           </>
         </div>
+
+        {/* Google AdSense */}
+        <GoogleAdSense className="mt-4" />
       </form>
     </Modal>
   );

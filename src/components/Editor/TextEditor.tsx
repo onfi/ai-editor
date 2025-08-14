@@ -16,6 +16,7 @@ export const TextEditor: React.FC = () => {
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isReplaceMode, setIsReplaceMode] = useState(false);
   const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
   const { content, setContent, setCursorPosition, setSelectedText } = useEditorStore();
   const { colors, isDark } = useThemeContext();
@@ -24,6 +25,11 @@ export const TextEditor: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
+        setIsReplaceMode(false);
+        setIsSearchOpen(true);
+      } else if ((e.ctrlKey || e.metaKey) && e.key === 'h') {
+        e.preventDefault();
+        setIsReplaceMode(true);
         setIsSearchOpen(true);
       } else if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
         e.preventDefault();
@@ -105,7 +111,8 @@ export const TextEditor: React.FC = () => {
         <SearchBar 
           editorView={viewRef.current} 
           isOpen={isSearchOpen} 
-          onClose={() => setIsSearchOpen(false)} 
+          onClose={() => setIsSearchOpen(false)}
+          isReplaceMode={isReplaceMode}
         />
         <div ref={editorRef} className={`mt-16 mb-20 h-full overflow-auto ${colors.bg}`} />
       </div>
